@@ -30,7 +30,10 @@ jobs:
         platform: [ubuntu-latest, macos-latest, windows-latest]
     timeout-minutes: 20
     steps:
-      - run: echo "Set: $RECORD_REPLAY_METADATA_TEST_RUN_ID"
+      - uses: actions/github-script@v6
+        with:
+          result-encoding: string
+          script: console.log("ENV =", process.env.RECORD_REPLAY_METADATA_TEST_RUN_ID)
         env:
           RECORD_REPLAY_METADATA_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs[matrix.platform + "testRunId"] }}
   
