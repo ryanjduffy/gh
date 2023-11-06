@@ -16,9 +16,9 @@ jobs:
           echo "macos-latest-id=$(npx uuid)" >> "$GITHUB_OUTPUT"
           echo "windows-latest-id=$(npx uuid)" >> "$GITHUB_OUTPUT"
     outputs:
-      ubuntu-latest-testRunId: ${{ steps.uuid.outputs.ubuntu-latest-id }}
-      macos-latest-testRunId: ${{ steps.uuid.outputs.macos-latest-id }}
-      windows-latest-testRunId: ${{ steps.uuid.outputs.windows-latest-id }}
+      ubuntu-latest: ${{ steps.uuid.outputs.ubuntu-latest-id }}
+      macos-latest: ${{ steps.uuid.outputs.macos-latest-id }}
+      windows-latest: ${{ steps.uuid.outputs.windows-latest-id }}
   e2etest:
     name: End-to-end tests (${{ matrix.shard }})
     runs-on: ubuntu-latest
@@ -30,10 +30,15 @@ jobs:
         platform: [ubuntu-latest, macos-latest, windows-latest]
     timeout-minutes: 20
     steps:
+      # - id: testRunId
+      #   uses: actions/github-script@v6
+      #   with: 
+      #     result-encoding: string
+      #     script: core.exportVariable("RECORD_REPLAY_METADATA_TEST_RUN_ID", process.env.RECORD_REPLAY_METADATA_TEST_RUN_ID)
       - uses: actions/github-script@v6
         with:
           result-encoding: string
           script: console.log("ENV =", process.env.RECORD_REPLAY_METADATA_TEST_RUN_ID)
         env:
-          RECORD_REPLAY_METADATA_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs[matrix.platform + "testRunId"] }}
+          RECORD_REPLAY_METADATA_TEST_RUN_ID: ${{ needs.generate-test-run-id.outputs[matrix.platform] }}
   
